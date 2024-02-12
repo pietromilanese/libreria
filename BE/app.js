@@ -16,7 +16,7 @@ const pool = new Pool({
 app.get('/', async (req, res) => {
   try {
     // Example query to fetch data from a table
-    const result = await pool.query('SELECT * FROM your_table_name');
+    const result = await pool.query('SELECT * FROM users');
     res.json(result.rows);
   } catch (error) {
     console.error('Error executing query', error);
