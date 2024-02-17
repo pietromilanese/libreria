@@ -1,27 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { getBooks } from './API/apiService';
+import React from "react";
+import Login from "./pages/login";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import BookList from "./pages/bookList";
 
-const BookList = () => {
-  const [books, setBooks] = useState([]);
-
-  useEffect(() => {
-   getBooks().then((res)=>{
-    setBooks(res);
-   })
-  }, []);
-
+const App = () => {
   return (
-    <div>
-      <h2>Book List</h2>
-      <ul>
-        {books.map(book => (
-          <li key={book.id}>
-            <strong>Title:</strong> {book.title}, <strong>Author:</strong> {book.author}, {book.description}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/books/:user" element={<BookList />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
-
-export default BookList;
+export default App;
