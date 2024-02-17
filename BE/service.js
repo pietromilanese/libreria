@@ -56,7 +56,7 @@ router.post("/books/:title/:author/:isbn/:description/:numOfRead/:userId", async
   )
 });
 
-router.delete("/books/:bookId", async (req, res) => {
+router.delete("/books/delete/:bookId", async (req, res) => {
   const bookId = req.params.bookId;
 
   deleteBook(pool, +bookId).then(
