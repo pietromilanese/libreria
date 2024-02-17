@@ -24,8 +24,9 @@ router.get("/users", async (_req, res) => {
   )
 });
 
-router.get("/books", async (_req, res) => {
-  getAllBooks(pool).then(
+router.get("/books/:userId", async (req, res) => {
+  const userId = req.params.userId;
+  getAllBooks(pool, +userId).then(
     (results) => {
       res.send(results);
     },
@@ -55,6 +56,20 @@ router.post("/books/:title/:author/:isbn/:description/:numOfRead/:userId", async
   )
 });
 
+router.delete("/books/:bookId", async (req, res) => {
+  const bookId = req.params.bookId;
+
+  deleteBook(pool, +bookId).then(
+    (results) => {
+      res.send(results);
+    },
+    (error) => {
+      res.status(error.status).json(error.message);
+    }
+  );
+});
+
+
 //service functions
 export const getAllUser = (pool) => {
   return new Promise((resolve, reject) => {
@@ -71,9 +86,9 @@ export const getAllUser = (pool) => {
   })
 };
 
-export const getAllBooks = (pool) => {
+export const getAllBooks = (pool, userId) => {
   return new Promise((resolve, reject) => {
-    pool.query('SELECT * FROM books', (error, results) => {
+    pool.query('SELECT * FROM books WHERE user_id = $1', [userId], (error, results) => {
       if (error) {
         reject({ status: 500, message: 'generic error' });
 
@@ -105,4 +120,19 @@ export const postBook = (pool, title, author, isbn, description, addTime, delete
       }
     )
   })
+};
+
+export const deleteBook = (pool, bookId) => {
+  return new Promise((resolve, reject) => {
+    pool.query('DELETE FROM books WHERE id = $1', [bookId], (error, results) => {
+      if (error) {
+        console.log(error);
+        reject({ status: 500, message: 'generic error' });
+      } else if (results.rowCount > 0) {
+        resolve({ status: 200, message: 'Book deleted successfully' });
+      } else {
+        reject({ status: 404, message: 'Book not found' });
+      }
+    });
+  });
 };
