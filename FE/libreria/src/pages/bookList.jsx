@@ -85,6 +85,10 @@ const BookList = () => {
     handleOpenModal(); // Open the modal for confirmation
   };
 
+  const handleBookDetail = (userId, bookId) => {
+    navigate((`/book/detail/${userId}/${bookId}`))
+  }
+
   return (
     <Box p={4}>
  <Navigation></Navigation>
@@ -128,8 +132,8 @@ const BookList = () => {
                   >
                     Delete
                   </Button>
-                  <Button variant="ghost" colorScheme="blue">
-                    Modify
+                  <Button variant="ghost" colorScheme="blue" onClick={() => handleBookDetail(userId, book.id)}>
+                    Detail
                   </Button>
                 </ButtonGroup>
               </CardFooter>

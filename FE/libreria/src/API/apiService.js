@@ -20,6 +20,21 @@ export const getBooks = async (userId) => {
     return data;
 };   
 
+export const getSingleBook = async (userId, bookId) => {
+  const res = await fetch(`${BASE_URL}/book/detail/${userId}/${bookId}`);
+
+  if (!res.ok) {
+      if (res.status === 404) {
+          throw new Error("User not found");
+      } else {
+          throw new Error(`Error fetching books. Status code: ${res.status}`);
+      }
+  }
+  const data = await res.json();
+  return data;
+};   
+
+
 export const postBook = async (title, author, isbn, description, numOfRead, userId) => {
     try {
       const response = await fetch(`${BASE_URL}/books/${title}/${author}/${isbn}/${description}/${numOfRead}/${userId}`, {

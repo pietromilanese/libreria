@@ -36,6 +36,20 @@ router.get("/books/:userId", async (req, res) => {
   )
 });
 
+router.get("/book/detail/:userId/:bookId", async (req, res) => {
+  const userId = req.params.userId;
+  const bookId = req.params.bookId;
+
+  getSingleBook(pool, +userId, +bookId).then(
+    (result) => {
+      res.send(result);
+    },
+    (error) => {
+      res.status(error.status).json(error.message);
+    }
+  );
+});
+
 router.post("/books/:title/:author/:isbn/:description/:numOfRead/:userId", async (req, res) => {
   const title = req.params.title;
   const author = req.params.author;
@@ -99,6 +113,20 @@ export const getAllBooks = (pool, userId) => {
       }
     })
   })
+};
+
+export const getSingleBook = (pool, userId, bookId) => {
+  return new Promise((resolve, reject) => {
+    pool.query('SELECT * FROM books WHERE user_id = $1 AND id = $2', [userId, bookId], (error, results) => {
+      if (error) {
+        reject({ status: 500, message: 'generic error' });
+      } else if (results.rows.length > 0) {
+        resolve(results.rows[0]);
+      } else {
+        reject({ status: 404, message: 'not found' });
+      }
+    });
+  });
 };
 
 export const postBook = (pool, title, author, isbn, description, addTime, deleteTime, numOfRead, userId) => {
