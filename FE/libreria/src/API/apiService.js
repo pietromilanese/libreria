@@ -58,6 +58,8 @@ export const postBook = async (title, author, isbn, description, numOfRead, user
   };
 
 
+
+
 export const deleteBook = async (bookId) => {
     const res = await fetch(`${BASE_URL}/books/delete/${bookId}`, {
       method: "DELETE",
@@ -73,4 +75,32 @@ export const deleteBook = async (bookId) => {
   
     const result = await res.json();
     return result;
+  };
+
+  export const updateBook = async (userId, bookId, updatedBookInfo) => {
+    try {
+      const response = await fetch(`${BASE_URL}/book/update/${userId}/${bookId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedBookInfo),
+      });
+
+      console.log(updatedBookInfo)
+  
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error("Book not found");
+        } else {
+          throw new Error(`Error updating book. Status code: ${response.status}`);
+        }
+      }
+  
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error updating book:", error);
+      throw error;
+    }
   };

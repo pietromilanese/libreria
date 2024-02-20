@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Card,
   Image,
@@ -7,14 +8,30 @@ import {
   Text,
   CardFooter,
   Button,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
+  ModalHeader,
+  ModalCloseButton,
 } from "@chakra-ui/react";
+import { EditIcon } from '@chakra-ui/icons'
 import { getSingleBook } from "../API/apiService";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Navigation from "./navigation";
+import UpdateBookForm from "./detailForm";
+import { useDisclosure } from "@chakra-ui/react";
 
 const DetailBook = () => {
   const [book, setBook] = useState({});
   const { userId, bookId } = useParams();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     handleBookDetail();
@@ -24,51 +41,85 @@ const DetailBook = () => {
     getSingleBook(userId, bookId)
       .then((res) => {
         if (res.length === 0) {
-          console.log(error);
+          console.error("Book not found");
         } else {
-         console.log(res)
           setBook(res);
         }
       })
       .catch(() => {
-        console.log(error);
+        console.error("Book not found");
       });
   };
 
   return (
     <div>
-      
-        <Card
-          direction={{ base: "column", sm: "row" }}
-          overflow="hidden"
-          variant="outline"
+      <Navigation />
+      <Breadcrumb m={4}>
+        <BreadcrumbItem>
+          <BreadcrumbLink
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            Books
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem isCurrentPage>
+          <BreadcrumbLink>Detail</BreadcrumbLink>
+        </BreadcrumbItem>
+      </Breadcrumb>
+
+      <Card
+        direction={{ base: "column", sm: "row" }}
+        overflow="hidden"
+        variant="outline"
+        m={4}
+      >
+        <Image
+          maxW={{ base: "100%", sm: "50%" }}
+          src={`https://api.placid.app/u/qsraj?title[text]=${book.author}%20`}
+          alt=""
+        />
+
+        <Stack>
+          <CardBody>
+            <Heading size="md">Title: {book.title}</Heading>
+            <Heading size="sm">Author: {book.author}</Heading>
+            <Text>ISBN: {book.isbn}</Text>
+            <Text py="2">{book.description}</Text>
+            <Text>Number of read: {book.numofread}</Text>
+          </CardBody>
+
+          <CardFooter><Button onClick={onOpen}> <EditIcon/> Edit</Button></CardFooter>
+        </Stack>
+
+        
+
+        <Modal
+          isOpen={isOpen}
+          onClose={() => {
+            onClose();
+            handleBookDetail();
+          }}
         >
-          <Image
-            objectFit="cover"
-            maxW={{ base: "100%", sm: "200px" }}
-            src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"
-            alt="Caffe Latte"
-          />
-
-          <Stack>
-            <CardBody>
-              <Heading size="md">Title: {book.title}</Heading>
-              <Heading size="sm">Author: {book.Author}</Heading>
-              <Text>ISBN: {book.isbn}</Text>
-              <Text py="2">
-                {book.description}
-              </Text>
-              <Text>Number of read: {book.numofread}</Text>
-            </CardBody>
-
-            <CardFooter>
-              <Button variant="solid" colorScheme="blue">
-                Buy Latte
-              </Button>
-            </CardFooter>
-          </Stack>
-        </Card>
-      
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Modify book</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <UpdateBookForm
+                userId={userId}
+                bookId={book.id}
+                booktitle={book.title}
+                bookauthor={book.author}
+                bookisbn={book.isbn}
+                bookdescription={book.description}
+                booknumOfRead={book.numofread}
+              />
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      </Card>
     </div>
   );
 };

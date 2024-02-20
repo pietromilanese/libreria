@@ -7,16 +7,19 @@ const Navigation = () => {
 
     return(
         <Box p={4}>
-                 <Flex justifyContent={"space-between"}>
+                 <Flex justifyContent={"space-between"} alignItems={"center"}>
         <Box w={{ base: "30px", md: "70px" }} m={3}>
           <Logo />
         </Box>
-        <Button
+    
+        
+      <Button
                   colorScheme="green"
                   onClick={() => navigate('/')}
                 >
                   LogOut
                 </Button>
+     
       </Flex>
         </Box>
     )

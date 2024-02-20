@@ -3,6 +3,7 @@ import pg from "pg";
 const { Pool } = pg;
 export const router = Router();
 
+
 // PostgreSQL connection configuration
 const pool = new Pool({
   user: 'pietro',
@@ -74,6 +75,25 @@ router.delete("/books/delete/:bookId", async (req, res) => {
   const bookId = req.params.bookId;
 
   deleteBook(pool, +bookId).then(
+    (results) => {
+      res.send(results);
+    },
+    (error) => {
+      res.status(error.status).json(error.message);
+    }
+  );
+});
+
+
+router.put("/book/update/:userId/:bookId", async (req, res) => {
+  const userId = req.params.userId;
+  const bookId = req.params.bookId;
+
+  // Extract updated book details from request body
+  const { title, author, isbn, description, numOfRead } = req.body;
+
+  // Update the book in the database
+  updateBook(pool, +userId, +bookId, title, author, isbn, description, +numOfRead).then(
     (results) => {
       res.send(results);
     },
@@ -162,5 +182,24 @@ export const deleteBook = (pool, bookId) => {
         reject({ status: 404, message: 'Book not found' });
       }
     });
+  });
+};
+
+export const updateBook = (pool, userId, bookId, title, author, isbn, description, numOfRead) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      `UPDATE books SET title = $1, author = $2, isbn = $3, description = $4, numOfRead = $5 WHERE user_id = $6 AND id = $7`,
+      [title, author, isbn, description, numOfRead, userId, bookId],
+      (error, results) => {
+        if (error) {
+          console.error(error);
+          reject({ status: 500, message: "generic error" });
+        } else if (results.rowCount > 0) {
+          resolve(results.rows);
+        } else {
+          reject({ status: 404, message: "not found" });
+        }
+      }
+    );
   });
 };

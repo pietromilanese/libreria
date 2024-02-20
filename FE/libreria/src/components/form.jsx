@@ -3,7 +3,7 @@ import { Box, Heading, FormControl, FormLabel, Input, Textarea, Button, useToast
 import { postBook } from "../API/apiService";
 
 
-const AddBookForm = ({ userId, onBookAdded }) => {
+const AddBookForm = ({ userId }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [isbn, setISBN] = useState("");
@@ -25,16 +25,14 @@ const AddBookForm = ({ userId, onBookAdded }) => {
         isClosable: true,
       });
 
-      // Optionally, you can reset the form fields after successful submission
+      // reset the form fields after successful submission
       setTitle("");
       setAuthor("");
       setISBN("");
       setDescription("");
       setNumOfRead("");
 
-      if (onBookAdded) {
-        onBookAdded();
-      }
+      
 
     } catch (error) {
       // Display error message

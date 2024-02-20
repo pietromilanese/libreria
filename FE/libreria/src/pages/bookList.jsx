@@ -29,6 +29,7 @@ import {
 import AddBookForm from "../components/form";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { DeleteIcon } from "@chakra-ui/icons";
 
 
 const BookList = () => {
@@ -90,8 +91,8 @@ const BookList = () => {
   }
 
   return (
-    <Box p={4}>
- <Navigation></Navigation>
+    <Box >
+ <Navigation/>
 
       {noBookFound && (
         <Alert status="warning" rounded="md" mb={4}>
@@ -100,18 +101,22 @@ const BookList = () => {
         </Alert>
       )}
       {/* Open the modal button */}
+      <Box p={4}>
       <Heading>Welcome {userName} </Heading>
-      <Button colorScheme="teal" onClick={handleOpenModal} mb={4}>
+      <Text>This is Your personal Library, happy reading!</Text>
+      <Button mt={4} colorScheme="teal" onClick={handleOpenModal} mb={4}>
         Add New Book
       </Button>
+      </Box>
 
       <Box p={4}>
-        <Flex flexWrap={"wrap"} justifyContent={"flex-start"}>
+        <Flex flexWrap={"wrap"} justifyContent={{base: "center" , md: "flex-start"}}>
           {books.map((book) => (
-            <Card key={book.id} maxW="sm" m={4}>
-              <CardBody>
+            <Card  key={book.id} maxW="md" mr={4} mt={3} onClick={() => handleBookDetail(userId, book.id)}>
+              <CardBody _hover={{ opacity: 0.8, cursor: "pointer" }}>
                 <Image
-                  src="https://picsum.photos/200"
+
+                  src={`https://api.placid.app/u/qsraj?title[text]=${book.author}%20%21`}
                   alt=""
                   borderRadius="lg"
                 />
@@ -124,17 +129,17 @@ const BookList = () => {
               <Divider />
               <CardFooter>
                 <ButtonGroup spacing="2">
+                
                   <Button
                     colorScheme="red"
                     onClick={() => handleDeleteButtonClick(book.id)}
-                    size="sm"
-                    mt={2}
+                    
+                    
                   >
-                    Delete
+                    <DeleteIcon /> Delete
                   </Button>
-                  <Button variant="ghost" colorScheme="blue" onClick={() => handleBookDetail(userId, book.id)}>
-                    Detail
-                  </Button>
+                  
+                  
                 </ButtonGroup>
               </CardFooter>
             </Card>
@@ -153,7 +158,7 @@ const BookList = () => {
               {bookToDelete ? (
                 <p>Are you sure you want to delete this book?</p>
               ) : (
-                <AddBookForm userId={userId} onBookAdded={handleAddBook} />
+                <AddBookForm userId={userId}  />
               )}
             </ModalBody>
             <ModalFooter>
