@@ -61,9 +61,9 @@ const UpdateBookForm = ({
   };
 
   return (
-    <Box>
+    <Box m={4}>
       <Heading as="h2" size="lg" mb={4}>
-        Add a New Book
+        Edit Data
       </Heading>
       <FormControl>
         <FormLabel>Title</FormLabel>
@@ -115,7 +115,7 @@ const UpdateBookForm = ({
       </FormControl>
 
       <Button colorScheme="teal" onClick={() => handleUpdateBook()}>
-        Add Book
+       Save
       </Button>
     </Box>
   );

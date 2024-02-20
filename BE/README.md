@@ -12,14 +12,19 @@ docker run --name libri -e POSTGRES_USER=pietro -e POSTGRES_DB=libri -e POSTGRES
 
 Una volta installato e avviato il container si procede a connettere il db con DBeaver.
 
-Nel folder sql sono presenti i comandi sql per creare le tabelle.
+Nel folder sql sono presenti i comandi sql per creare e popolare le tabelle.
 
 ```
 BE
 |-- sql/
 |   |-- book.sql
 |   |-- users.sql
+|   |-- usersList.sql
+|   |-- booksList.sql
+
 ```
+
+Proseguire popolando le tabelle rispettivamente con usersList.sql e booksList.ql
 
 Installare in seguito le librerie per la gestione del server in Node
 

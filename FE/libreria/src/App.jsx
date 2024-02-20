@@ -2,7 +2,7 @@ import React from "react";
 import Login from "./pages/login";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import BookList from "./pages/bookList";
-import DetailBook from "./components/detail";
+import DetailBook from "./pages/detail";
 
 const App = () => {
   return (

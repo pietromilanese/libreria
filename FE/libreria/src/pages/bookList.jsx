@@ -20,6 +20,7 @@ import {
   CardBody,
   CardFooter,
   Heading,
+  Highlight,
   Text,
   Image,
   Stack,
@@ -91,7 +92,7 @@ const BookList = () => {
   }
 
   return (
-    <Box >
+    <Box p={4}>
  <Navigation/>
 
       {noBookFound && (
@@ -102,8 +103,18 @@ const BookList = () => {
       )}
       {/* Open the modal button */}
       <Box p={4}>
-      <Heading>Welcome {userName} </Heading>
-      <Text>This is Your personal Library, happy reading!</Text>
+      <Heading size='2xl' mb={3}>Welcome {userName} 
+      </Heading>
+      
+      <Heading as='h2' size='lg' lineHeight='tall'>
+         <Highlight
+    query='happy reading!'
+    styles={{ px: '2', py: '2', rounded: 'full', bg: 'green.100' }}
+  >
+    This is Your personal Library, happy reading!
+  </Highlight>
+
+</Heading>
       <Button mt={4} colorScheme="teal" onClick={handleOpenModal} mb={4}>
         Add New Book
       </Button>
@@ -112,10 +123,10 @@ const BookList = () => {
       <Box p={4}>
         <Flex flexWrap={"wrap"} justifyContent={{base: "center" , md: "flex-start"}}>
           {books.map((book) => (
-            <Card  key={book.id} maxW="md" mr={4} mt={3} onClick={() => handleBookDetail(userId, book.id)}>
+            <Card  key={book.id} maxW="md" mr={4} mt={3} >
               <CardBody _hover={{ opacity: 0.8, cursor: "pointer" }}>
                 <Image
-
+                  onClick={() => handleBookDetail(userId, book.id)}
                   src={`https://api.placid.app/u/qsraj?title[text]=${book.author}%20%21`}
                   alt=""
                   borderRadius="lg"
@@ -136,7 +147,7 @@ const BookList = () => {
                     
                     
                   >
-                    <DeleteIcon /> Delete
+                     Delete
                   </Button>
                   
                   
