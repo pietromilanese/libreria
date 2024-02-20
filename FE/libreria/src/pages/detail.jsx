@@ -18,7 +18,7 @@ import {
   ModalHeader,
   ModalCloseButton,
 } from "@chakra-ui/react";
-import { EditIcon } from '@chakra-ui/icons'
+import { EditIcon } from "@chakra-ui/icons";
 import { getSingleBook } from "../API/apiService";
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -90,10 +90,13 @@ const DetailBook = () => {
             <Text>Number of read: {book.numofread}</Text>
           </CardBody>
 
-          <CardFooter><Button onClick={onOpen}> <EditIcon/> Edit</Button></CardFooter>
+          <CardFooter>
+            <Button onClick={onOpen}>
+              {" "}
+              <EditIcon /> Edit
+            </Button>
+          </CardFooter>
         </Stack>
-
-        
 
         <Modal
           isOpen={isOpen}

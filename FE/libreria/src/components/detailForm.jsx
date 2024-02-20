@@ -47,7 +47,6 @@ const UpdateBookForm = ({
         duration: 3000,
         isClosable: true,
       });
-
     } catch (error) {
       // Display error message
       toast({
@@ -115,7 +114,7 @@ const UpdateBookForm = ({
       </FormControl>
 
       <Button colorScheme="teal" onClick={() => handleUpdateBook()}>
-       Save
+        Save
       </Button>
     </Box>
   );

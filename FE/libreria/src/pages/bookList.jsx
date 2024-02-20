@@ -25,13 +25,10 @@ import {
   Image,
   Stack,
   Divider,
-  Wrap,
 } from "@chakra-ui/react";
 import AddBookForm from "../components/form";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { DeleteIcon } from "@chakra-ui/icons";
-
 
 const BookList = () => {
   const [books, setBooks] = useState([]);
@@ -40,7 +37,6 @@ const BookList = () => {
   const [bookToDelete, setBookToDelete] = useState(null); // Track the book to delete
   const { userName, userId } = useParams();
   const navigate = useNavigate();
-
 
   useEffect(() => {
     handleAddBook();
@@ -67,7 +63,7 @@ const BookList = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setBookToDelete(null); // Reset the book to delete when closing the modal
+    setBookToDelete(null);
     handleAddBook();
   };
 
@@ -78,7 +74,6 @@ const BookList = () => {
       handleCloseModal();
     } catch (error) {
       console.error("Error deleting book:", error);
-      // Handle error as needed
     }
   };
 
@@ -88,12 +83,12 @@ const BookList = () => {
   };
 
   const handleBookDetail = (userId, bookId) => {
-    navigate((`/book/detail/${userId}/${bookId}`))
-  }
+    navigate(`/book/detail/${userId}/${bookId}`);
+  };
 
   return (
     <Box p={4}>
- <Navigation/>
+      <Navigation />
 
       {noBookFound && (
         <Alert status="warning" rounded="md" mb={4}>
@@ -101,33 +96,36 @@ const BookList = () => {
           No book found in the database. Add a new book!
         </Alert>
       )}
-      {/* Open the modal button */}
-      <Box p={4}>
-      <Heading size='2xl' mb={3}>Welcome {userName} 
-      </Heading>
-      
-      <Heading as='h2' size='lg' lineHeight='tall'>
-         <Highlight
-    query='happy reading!'
-    styles={{ px: '2', py: '2', rounded: 'full', bg: 'green.100' }}
-  >
-    This is Your personal Library, happy reading!
-  </Highlight>
 
-</Heading>
-      <Button mt={4} colorScheme="teal" onClick={handleOpenModal} mb={4}>
-        Add New Book
-      </Button>
+      <Box p={4}>
+        <Heading size="2xl" mb={3}>
+          Welcome {userName}
+        </Heading>
+
+        <Heading as="h2" size="lg" lineHeight="tall">
+          <Highlight
+            query="happy reading!"
+            styles={{ px: "2", py: "2", rounded: "full", bg: "green.100" }}
+          >
+            This is Your personal Library, happy reading!
+          </Highlight>
+        </Heading>
+        <Button mt={4} colorScheme="teal" onClick={handleOpenModal} mb={4}>
+          Add New Book
+        </Button>
       </Box>
 
       <Box p={4}>
-        <Flex flexWrap={"wrap"} justifyContent={{base: "center" , md: "flex-start"}}>
+        <Flex
+          flexWrap={"wrap"}
+          justifyContent={{ base: "center", md: "flex-start" }}
+        >
           {books.map((book) => (
-            <Card  key={book.id} maxW="md" mr={4} mt={3} >
-              <CardBody _hover={{ opacity: 0.8, cursor: "pointer" }}>
+            <Card key={book.id} maxW="md" mr={4} mt={3}>
+              <CardBody _hover={{ opacity: 0.8, cursor: "pointer" }} onClick={() => handleBookDetail(userId, book.id)}>
                 <Image
-                  onClick={() => handleBookDetail(userId, book.id)}
-                  src={`https://api.placid.app/u/qsraj?title[text]=${book.author}%20%21`}
+                  
+                  src={`https://api.placid.app/u/qsraj?title[text]=${book.author}%20`}
                   alt=""
                   borderRadius="lg"
                 />
@@ -140,17 +138,12 @@ const BookList = () => {
               <Divider />
               <CardFooter>
                 <ButtonGroup spacing="2">
-                
                   <Button
                     colorScheme="red"
                     onClick={() => handleDeleteButtonClick(book.id)}
-                    
-                    
                   >
-                     Delete
+                    Delete
                   </Button>
-                  
-                  
                 </ButtonGroup>
               </CardFooter>
             </Card>
@@ -169,7 +162,7 @@ const BookList = () => {
               {bookToDelete ? (
                 <p>Are you sure you want to delete this book?</p>
               ) : (
-                <AddBookForm userId={userId}  />
+                <AddBookForm userId={userId} />
               )}
             </ModalBody>
             <ModalFooter>

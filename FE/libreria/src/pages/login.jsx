@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Alert, AlertIcon, Box, Center, Heading, Image } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertIcon,
+  Box,
+  Center,
+  Heading,
+  Image,
+} from "@chakra-ui/react";
 import { getUsers } from "../API/apiService";
 import { Select } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { Logo } from "../assets/logo";
-
 
 const Login = () => {
   const [users, setUser] = useState([]);
@@ -16,13 +22,8 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-  
-
-
     if (selectedUser) {
-      const userName = users.find(user => user.id === +selectedUser);
-      console.log(userName.first_name);
-     
+      const userName = users.find((user) => user.id === +selectedUser);
       // Redirect to the books page with the selected userId
       navigate(`/books/${userName.first_name}/${selectedUser}`);
     } else {
@@ -51,9 +52,11 @@ const Login = () => {
         rounded="md"
         bg="white"
       >
-        <Logo/>
-        <Heading p={4} mb={6} as="h2">Welcome to YourLibrary</Heading>
-      
+        <Logo />
+        <Heading p={4} mb={6} as="h2">
+          Welcome to YourLibrary
+        </Heading>
+
         {noUsersFound && (
           <Alert status="warning" rounded="md" mb={4}>
             <AlertIcon />
