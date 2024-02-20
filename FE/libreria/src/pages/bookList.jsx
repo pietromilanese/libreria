@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { getBooks, deleteBook } from "../API/apiService";
+import { Logo } from "../assets/logo";
+import Navigation from "../components/navigation";
 import {
   Box,
   Alert,
   AlertIcon,
   Flex,
-  Spacer,
   Button,
+  ButtonGroup,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -14,19 +16,40 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  Card,
+  CardBody,
+  CardFooter,
+  Heading,
+  Text,
+  Image,
+  Stack,
+  Divider,
+  Wrap,
 } from "@chakra-ui/react";
 import AddBookForm from "../components/form";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 
 const BookList = () => {
   const [books, setBooks] = useState([]);
   const [noBookFound, setNoBookFound] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bookToDelete, setBookToDelete] = useState(null); // Track the book to delete
-  const { user } = useParams();
+  const { userName, userId } = useParams();
+  const navigate = useNavigate();
+
 
   useEffect(() => {
-    getBooks(user)
+    handleAddBook();
+  }, [userId]);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleAddBook = () => {
+    getBooks(userId)
       .then((res) => {
         if (res.length === 0) {
           setNoBookFound(true);
@@ -37,15 +60,13 @@ const BookList = () => {
       .catch(() => {
         setNoBookFound(true);
       });
-  }, [books]);
-
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
+    setNoBookFound(false);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setBookToDelete(null); // Reset the book to delete when closing the modal
+    handleAddBook();
   };
 
   const handleDeleteBook = async (bookId) => {
@@ -65,17 +86,8 @@ const BookList = () => {
   };
 
   return (
-    <Box textAlign="center">
-      <Flex>
-        {/* Your existing code */}
-        <Box p="4" bg="red.400">
-          Logo
-        </Box>
-        <Spacer />
-        <Box p="4" bg="green.400">
-          LogOut
-        </Box>
-      </Flex>
+    <Box p={4}>
+ <Navigation></Navigation>
 
       {noBookFound && (
         <Alert status="warning" rounded="md" mb={4}>
@@ -83,27 +95,49 @@ const BookList = () => {
           No book found in the database. Add a new book!
         </Alert>
       )}
+      {/* Open the modal button */}
+      <Heading>Welcome {userName} </Heading>
+      <Button colorScheme="teal" onClick={handleOpenModal} mb={4}>
+        Add New Book
+      </Button>
 
-      <Box bg="tomato" p={4} display="flex" justifyContent="center" flexDir="row">
-        {books.map((book) => (
-          <div key={book.id}>
-            <p>{book.title}</p>
-            <p>{book.author}</p>
-            <p>{book.description}</p>
-            
-            {/* Delete button for each book */}
-            <Button colorScheme="red" onClick={() => handleDeleteButtonClick(book.id)} size="sm" mt={2}>
-              Delete
-            </Button>
-          </div>
-        ))}
+      <Box p={4}>
+        <Flex flexWrap={"wrap"} justifyContent={"flex-start"}>
+          {books.map((book) => (
+            <Card key={book.id} maxW="sm" m={4}>
+              <CardBody>
+                <Image
+                  src="https://picsum.photos/200"
+                  alt=""
+                  borderRadius="lg"
+                />
+                <Stack mt="6" spacing="3">
+                  <Heading size="md">{book.title}</Heading>
+                  <Heading size="sm">{book.author}</Heading>
+                  <Text>{book.description}</Text>
+                </Stack>
+              </CardBody>
+              <Divider />
+              <CardFooter>
+                <ButtonGroup spacing="2">
+                  <Button
+                    colorScheme="red"
+                    onClick={() => handleDeleteButtonClick(book.id)}
+                    size="sm"
+                    mt={2}
+                  >
+                    Delete
+                  </Button>
+                  <Button variant="ghost" colorScheme="blue">
+                    Modify
+                  </Button>
+                </ButtonGroup>
+              </CardFooter>
+            </Card>
+          ))}
+        </Flex>
 
-        {/* Button to open the modal */}
-        <Button colorScheme="teal" onClick={handleOpenModal} mb={4}>
-          Add New Book
-        </Button>
-
-        {/* Modal for adding a new book or confirming deletion */}
+        {/* Modal to add or delete book */}
         <Modal isOpen={isModalOpen} onClose={handleCloseModal} size="md">
           <ModalOverlay />
           <ModalContent>
@@ -115,12 +149,15 @@ const BookList = () => {
               {bookToDelete ? (
                 <p>Are you sure you want to delete this book?</p>
               ) : (
-                <AddBookForm userId={user} />
+                <AddBookForm userId={userId} onBookAdded={handleAddBook} />
               )}
             </ModalBody>
             <ModalFooter>
               {bookToDelete ? (
-                <Button colorScheme="red" onClick={() => handleDeleteBook(bookToDelete)}>
+                <Button
+                  colorScheme="red"
+                  onClick={() => handleDeleteBook(bookToDelete)}
+                >
                   Delete
                 </Button>
               ) : null}

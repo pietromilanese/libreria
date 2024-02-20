@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Alert, AlertIcon, Box, Center, Heading } from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Center, Heading, Image } from "@chakra-ui/react";
 import { getUsers } from "../API/apiService";
 import { Select } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { Logo } from "../assets/logo";
+
 
 const Login = () => {
   const [users, setUser] = useState([]);
@@ -14,9 +16,15 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
+  
+
+
     if (selectedUser) {
+      const userName = users.find(user => user.id === +selectedUser);
+      console.log(userName.first_name);
+     
       // Redirect to the books page with the selected userId
-      navigate(`/books/${selectedUser}`);
+      navigate(`/books/${userName.first_name}/${selectedUser}`);
     } else {
       // Handle the case where no user is selected
       setShowAlert(true);
@@ -43,9 +51,9 @@ const Login = () => {
         rounded="md"
         bg="white"
       >
-        <Heading as="h1" size="lg" p={4} m={4}>
-          Log-in to your account
-        </Heading>
+        <Logo/>
+        <Heading p={4} mb={6} as="h2">Welcome to YourLibrary</Heading>
+      
         {noUsersFound && (
           <Alert status="warning" rounded="md" mb={4}>
             <AlertIcon />
@@ -56,7 +64,7 @@ const Login = () => {
         <Select
           value={selectedUser}
           onChange={(e) => setSelectedUser(e.target.value)}
-          placeholder="Choose an account"
+          placeholder="Choose account"
           mb={4}
         >
           {users.map((user) => (

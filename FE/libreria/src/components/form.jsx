@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Heading, FormControl, FormLabel, Input, Textarea, Button, useToast } from "@chakra-ui/react";
 import { postBook } from "../API/apiService";
-const AddBookForm = ({ userId }) => {
+
+
+const AddBookForm = ({ userId, onBookAdded }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [isbn, setISBN] = useState("");
@@ -13,7 +15,7 @@ const AddBookForm = ({ userId }) => {
   const handleAddBook = async () => {
     try {
       // Call the postBook function to add a new book
-      const result = await postBook(title, author, isbn, description, parseInt(numOfRead, 10), userId);
+     await postBook(title, author, isbn, description, parseInt(numOfRead, 10), userId);
 
       // Display success message
       toast({
@@ -29,6 +31,11 @@ const AddBookForm = ({ userId }) => {
       setISBN("");
       setDescription("");
       setNumOfRead("");
+
+      if (onBookAdded) {
+        onBookAdded();
+      }
+
     } catch (error) {
       // Display error message
       toast({
@@ -40,6 +47,7 @@ const AddBookForm = ({ userId }) => {
       });
     }
   };
+
 
   return (
     <Box>
